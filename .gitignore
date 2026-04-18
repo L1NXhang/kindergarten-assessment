@@ -1,0 +1,42 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+*.egg
+dist/
+build/
+.eggs/
+
+# Database
+*.db
+backend/instance/
+
+# Environment
+.env
+.venv/
+venv/
+
+# Uploads
+uploads/*
+!uploads/.gitkeep
+
+# Backups
+backups/*
+!backups/.gitkeep
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Node
+node_modules/
+frontend/dist/
+
+# Trae
+.trae/
