@@ -8,8 +8,8 @@
       <p class="confirm-message">{{ message }}</p>
     </div>
     <template #footer>
-      <button class="btn btn-secondary" @click="cancel">取消</button>
-      <button class="btn" :class="type === 'danger' ? 'btn-danger' : 'btn-primary'" @click="confirm">
+      <button class="confirm-btn confirm-btn--cancel" @click="cancel">取消</button>
+      <button class="confirm-btn" :class="type === 'danger' ? 'confirm-btn--danger' : 'confirm-btn--primary'" @click="confirm">
         {{ confirmText }}
       </button>
     </template>
@@ -57,32 +57,81 @@ function cancel() {
   flex-direction: column;
   align-items: center;
   text-align: center;
-  padding: 8px 0;
+  padding: 12px 0;
 }
 
 .confirm-icon {
-  width: 48px;
-  height: 48px;
+  width: 52px;
+  height: 52px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   margin-bottom: 16px;
+  flex-shrink: 0;
 }
 
 .confirm-icon-danger {
   background: #FEF2F2;
-  color: var(--color-danger);
+  color: #DC2626;
 }
 
 .confirm-icon-warning {
   background: #FFFBEB;
-  color: var(--color-warning);
+  color: #D97706;
 }
 
 .confirm-message {
-  font-size: var(--font-size-sm);
+  font-size: 14px;
   color: var(--color-text-secondary);
   line-height: 1.6;
+  margin: 0;
+}
+
+.confirm-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 20px;
+  font-size: 13px;
+  font-weight: 500;
+  border-radius: var(--radius-md);
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  line-height: 1.4;
+}
+
+.confirm-btn--cancel {
+  background: #fff;
+  border-color: var(--color-border);
+  color: var(--color-text-secondary);
+}
+
+.confirm-btn--cancel:hover {
+  background: var(--color-border-subtle);
+  color: var(--color-text-primary);
+}
+
+.confirm-btn--primary {
+  background: var(--color-accent);
+  color: #fff;
+  border-color: var(--color-accent);
+}
+
+.confirm-btn--primary:hover {
+  background: #4338CA;
+  border-color: #4338CA;
+}
+
+.confirm-btn--danger {
+  background: #DC2626;
+  color: #fff;
+  border-color: #DC2626;
+}
+
+.confirm-btn--danger:hover {
+  background: #B91C1C;
+  border-color: #B91C1C;
 }
 </style>

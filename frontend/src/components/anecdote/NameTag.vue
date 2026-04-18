@@ -52,30 +52,38 @@ const textColor = computed(() => {
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  padding: 2px 10px;
-  border-radius: 12px;
+  padding: 3px 12px;
+  border-radius: var(--radius-full);
   font-size: var(--font-size-xs);
   font-weight: 500;
   white-space: nowrap;
+  transition: all var(--transition-fast);
+  line-height: 1.4;
+}
+
+.name-tag:hover {
+  filter: brightness(0.96);
 }
 
 .tag-close {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
+  width: 16px;
+  height: 16px;
+  border-radius: var(--radius-full);
   cursor: pointer;
-  opacity: 0.6;
-  transition: opacity 0.15s ease;
+  opacity: 0.5;
+  transition: all var(--transition-fast);
   background: none;
   border: none;
   padding: 0;
   color: inherit;
+  margin-left: 2px;
 }
 
 .tag-close:hover {
   opacity: 1;
+  background: rgba(0, 0, 0, 0.08);
 }
 </style>

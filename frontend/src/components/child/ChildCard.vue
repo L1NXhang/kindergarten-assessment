@@ -1,17 +1,16 @@
 <template>
-  <div class="child-card card" @click="$emit('click')">
-    <div class="child-card-avatar" :style="{ background: avatarColor }">
+  <div class="child-card" @click="$emit('click')">
+    <div class="child-card__avatar" :style="{ background: avatarColor }">
       {{ avatarText }}
     </div>
-    <div class="child-card-info">
-      <h4 class="child-card-name">{{ child.name }}</h4>
-      <p class="child-card-meta">
-        <span>{{ genderLabel }}</span>
-        <span v-if="child.age"> · {{ child.age }}</span>
-      </p>
+    <div class="child-card__body">
+      <span class="child-card__name">{{ child.name }}</span>
+      <span class="child-card__meta">
+        {{ genderLabel }}<template v-if="child.age"> · {{ child.age }}</template>
+      </span>
     </div>
-    <div class="child-card-stats" v-if="child.anecdote_count !== undefined">
-      <span class="text-xs text-tertiary">{{ child.anecdote_count }} 条记录</span>
+    <div class="child-card__count" v-if="child.anecdote_count !== undefined">
+      {{ child.anecdote_count }} 条记录
     </div>
   </div>
 </template>
@@ -47,47 +46,64 @@ const genderLabel = computed(() => {
   display: flex;
   align-items: center;
   gap: 12px;
+  padding: 12px 16px;
+  background: #fff;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
   cursor: pointer;
-  transition: all 0.15s ease;
-  padding: 14px 16px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: var(--shadow-sm);
 }
 
 .child-card:hover {
+  transform: translateY(-2px);
   box-shadow: var(--shadow-md);
-  transform: translateY(-1px);
 }
 
-.child-card-avatar {
-  width: 36px;
-  height: 36px;
+.child-card__avatar {
+  width: 38px;
+  height: 38px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   color: #fff;
-  font-size: var(--font-size-sm);
+  font-size: 14px;
   font-weight: 600;
   flex-shrink: 0;
 }
 
-.child-card-info {
+.child-card__body {
   flex: 1;
   min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
 }
 
-.child-card-name {
-  font-size: var(--font-size-sm);
+.child-card__name {
+  font-size: 14px;
   font-weight: 600;
   color: var(--color-text-primary);
-  margin-bottom: 1px;
+  line-height: 1.3;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-.child-card-meta {
-  font-size: var(--font-size-xs);
+.child-card__meta {
+  font-size: 12px;
   color: var(--color-text-tertiary);
+  line-height: 1.3;
 }
 
-.child-card-stats {
+.child-card__count {
   flex-shrink: 0;
+  font-size: 12px;
+  color: var(--color-text-tertiary);
+  white-space: nowrap;
+  padding: 3px 8px;
+  background: var(--color-bg-tertiary, #F5F5F4);
+  border-radius: var(--radius-full);
 }
 </style>

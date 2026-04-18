@@ -1,32 +1,36 @@
 <template>
-  <div class="assessment-card card" @click="$emit('click')">
-    <div class="assessment-card-header">
-      <div class="assessment-card-info">
-        <h4 class="assessment-card-title">{{ assessment.title || '评估报告' }}</h4>
-        <p class="assessment-card-meta">
+  <div class="assessment-card" @click="$emit('click')">
+    <div class="card-top">
+      <div class="card-info">
+        <h4 class="card-title">{{ assessment.title || '评估报告' }}</h4>
+        <p class="card-meta">
           <span>{{ assessment.class_name || '' }}</span>
-          <span v-if="assessment.child_name"> - {{ assessment.child_name }}</span>
+          <span v-if="assessment.child_name" class="card-meta-sep">-</span>
+          <span v-if="assessment.child_name">{{ assessment.child_name }}</span>
         </p>
       </div>
-      <span class="badge" :style="{ background: statusColor + '15', color: statusColor }">
+      <span class="status-pill" :style="{ background: statusColor + '14', color: statusColor }">
         {{ statusLabel }}
       </span>
     </div>
-    <div class="assessment-card-body">
-      <div class="assessment-card-stats" v-if="assessment.scores">
+
+    <div class="card-body" v-if="assessment.scores">
+      <div class="domain-scores">
         <div
           v-for="domain in domains"
           :key="domain.key"
-          class="domain-stat"
+          class="domain-item"
         >
           <span class="domain-dot" :style="{ background: domain.color }"></span>
-          <span class="domain-name">{{ domain.name }}</span>
-          <span class="domain-score">{{ assessment.scores[domain.key] || '-' }}</span>
+          <span class="domain-label">{{ domain.name }}</span>
+          <span class="domain-value">{{ assessment.scores[domain.key] || '-' }}</span>
         </div>
       </div>
-      <div class="assessment-card-time">
-        {{ formatDate(assessment.created_at) }}
-      </div>
+    </div>
+
+    <div class="card-footer">
+      <span class="card-date">{{ formatDate(assessment.created_at) }}</span>
+      <svg class="card-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
     </div>
   </div>
 </template>
@@ -54,70 +58,138 @@ const statusColor = computed(() => statusInfo.value.color)
 
 <style scoped>
 .assessment-card {
+  background: #fff;
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-xl);
+  padding: 20px 24px;
   cursor: pointer;
-  transition: all 0.15s ease;
+  transition: all 0.2s ease;
+  box-shadow: var(--shadow-sm);
 }
 
 .assessment-card:hover {
   box-shadow: var(--shadow-md);
-  transform: translateY(-1px);
+  transform: translateY(-2px);
+  border-color: var(--color-border);
 }
 
-.assessment-card-header {
+/* Card Top */
+.card-top {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  margin-bottom: 12px;
+  gap: 12px;
+  margin-bottom: 16px;
 }
 
-.assessment-card-title {
-  font-size: var(--font-size-base);
+.card-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.card-title {
+  font-size: 15px;
   font-weight: 600;
   color: var(--color-text-primary);
-  margin-bottom: 2px;
+  margin: 0 0 4px 0;
+  letter-spacing: -0.01em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-.assessment-card-meta {
-  font-size: var(--font-size-xs);
+.card-meta {
+  font-size: 13px;
   color: var(--color-text-tertiary);
+  margin: 0;
+  display: flex;
+  align-items: center;
 }
 
-.assessment-card-body {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
+.card-meta-sep {
+  margin: 0 4px;
 }
 
-.assessment-card-stats {
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 12px;
+  border-radius: var(--radius-full);
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* Card Body - Domain Scores */
+.card-body {
+  margin-bottom: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--color-border-subtle);
+}
+
+.domain-scores {
   display: flex;
-  gap: 12px;
+  gap: 16px;
   flex-wrap: wrap;
 }
 
-.domain-stat {
+.domain-item {
   display: flex;
   align-items: center;
-  gap: 4px;
-  font-size: var(--font-size-xs);
+  gap: 5px;
 }
 
 .domain-dot {
-  width: 6px;
-  height: 6px;
+  width: 7px;
+  height: 7px;
   border-radius: 50%;
+  flex-shrink: 0;
 }
 
-.domain-name {
-  color: var(--color-text-secondary);
+.domain-label {
+  font-size: 12px;
+  color: var(--color-text-tertiary);
 }
 
-.domain-score {
+.domain-value {
+  font-size: 12px;
   font-weight: 600;
   color: var(--color-text-primary);
 }
 
-.assessment-card-time {
-  font-size: var(--font-size-xs);
+/* Card Footer */
+.card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.card-date {
+  font-size: 12px;
   color: var(--color-text-tertiary);
+}
+
+.card-arrow {
+  color: var(--color-text-tertiary);
+  opacity: 0;
+  transform: translateX(-4px);
+  transition: all 0.2s ease;
+}
+
+.assessment-card:hover .card-arrow {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .assessment-card {
+    padding: 16px 18px;
+  }
+
+  .domain-scores {
+    gap: 10px;
+  }
 }
 </style>

@@ -1,109 +1,134 @@
 <template>
-  <div class="page-container">
-    <div class="page-header">
-      <h2>历史对比</h2>
+  <div class="compare-page">
+    <!-- Page Title -->
+    <div class="compare-page__title">
+      <h1>历史对比</h1>
+      <p class="compare-page__subtitle">选择两次评估，查看发展变化趋势</p>
     </div>
 
     <!-- Selection Panel -->
-    <div class="card mb-lg">
-      <div class="card-header">
-        <h3 class="card-title">选择对比对象</h3>
-      </div>
-      <div class="compare-form">
-        <div class="form-group">
-          <label class="form-label">对比类型</label>
-          <select v-model="compareType" class="form-select" style="width:200px;">
-            <option value="child">幼儿对比</option>
-            <option value="class">班级对比</option>
-          </select>
+    <div class="selection-card">
+      <h3 class="section-title">选择对比对象</h3>
+      <div class="selection-form">
+        <div class="form-row">
+          <div class="form-field">
+            <label class="form-label">对比类型</label>
+            <select v-model="compareType" class="form-select">
+              <option value="child">幼儿对比</option>
+              <option value="class">班级对比</option>
+            </select>
+          </div>
+
+          <div class="form-field" v-if="compareType === 'child'">
+            <label class="form-label">选择幼儿</label>
+            <ChildSelector v-model="selectedChildId" :children="allChildren" />
+          </div>
+
+          <div class="form-field" v-if="compareType === 'class'">
+            <label class="form-label">选择班级</label>
+            <select v-model="selectedClassId" class="form-select">
+              <option value="">请选择</option>
+              <option v-for="cls in classes" :key="cls.id" :value="cls.id">{{ cls.name }}</option>
+            </select>
+          </div>
         </div>
 
-        <div class="form-group" v-if="compareType === 'child'">
-          <label class="form-label">选择幼儿</label>
-          <ChildSelector v-model="selectedChildId" :children="allChildren" />
-        </div>
+        <div class="form-row">
+          <div class="form-field form-field--grow">
+            <label class="form-label">第一次评估</label>
+            <select v-model="assessment1Id" class="form-select">
+              <option value="">请选择</option>
+              <option v-for="a in assessmentList" :key="a.id" :value="a.id">
+                {{ a.title || '评估' }} - {{ formatDate(a.created_at) }}
+              </option>
+            </select>
+          </div>
 
-        <div class="form-group" v-if="compareType === 'class'">
-          <label class="form-label">选择班级</label>
-          <select v-model="selectedClassId" class="form-select" style="width:200px;">
-            <option value="">请选择</option>
-            <option v-for="cls in classes" :key="cls.id" :value="cls.id">{{ cls.name }}</option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label class="form-label">第一次评估</label>
-          <select v-model="assessment1Id" class="form-select" style="width:300px;">
-            <option value="">请选择</option>
-            <option v-for="a in assessmentList" :key="a.id" :value="a.id">
-              {{ a.title || '评估' }} - {{ formatDate(a.created_at) }}
-            </option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label class="form-label">第二次评估</label>
-          <select v-model="assessment2Id" class="form-select" style="width:300px;">
-            <option value="">请选择</option>
-            <option v-for="a in assessmentList" :key="a.id" :value="a.id">
-              {{ a.title || '评估' }} - {{ formatDate(a.created_at) }}
-            </option>
-          </select>
+          <div class="form-field form-field--grow">
+            <label class="form-label">第二次评估</label>
+            <select v-model="assessment2Id" class="form-select">
+              <option value="">请选择</option>
+              <option v-for="a in assessmentList" :key="a.id" :value="a.id">
+                {{ a.title || '评估' }} - {{ formatDate(a.created_at) }}
+              </option>
+            </select>
+          </div>
         </div>
 
         <button
-          class="btn btn-primary"
+          class="compare-btn"
           @click="handleCompare"
           :disabled="!canCompare || loading"
         >
-          <span v-if="loading" class="loading-spinner" style="width:14px;height:14px;border-width:2px;"></span>
-          开始对比
+          <span v-if="loading" class="compare-btn__spinner"></span>
+          {{ loading ? '对比中...' : '开始对比' }}
         </button>
       </div>
     </div>
 
-    <!-- Comparison Result -->
-    <div v-if="comparisonData" class="grid grid-2 mb-lg">
-      <!-- Radar Comparison -->
-      <div class="card">
-        <div class="card-header">
-          <h3 class="card-title">雷达图对比</h3>
+    <!-- Comparison Results -->
+    <template v-if="comparisonData">
+      <div class="charts-grid">
+        <div class="chart-card">
+          <h3 class="section-title">雷达图对比</h3>
+          <DomainRadar :scores="comparisonData.scores1 || {}" :height="300" />
         </div>
-        <DomainRadar :scores="comparisonData.scores1 || {}" :height="300" />
-      </div>
 
-      <!-- Trend Chart -->
-      <div class="card">
-        <div class="card-header">
-          <h3 class="card-title">趋势变化</h3>
+        <div class="chart-card">
+          <h3 class="section-title">趋势变化</h3>
+          <TrendChart
+            :labels="trendLabels"
+            :datasets="trendDatasets"
+            :height="300"
+          />
         </div>
-        <TrendChart
-          :labels="trendLabels"
-          :datasets="trendDatasets"
-          :height="300"
-        />
       </div>
-    </div>
 
-    <!-- Score Comparison Table -->
-    <div class="card" v-if="comparisonData">
-      <div class="card-header">
-        <h3 class="card-title">分数对比</h3>
+      <!-- Score Comparison Table -->
+      <div class="table-card">
+        <h3 class="section-title">分数对比</h3>
+        <div class="score-table-wrapper">
+          <table class="score-table">
+            <thead>
+              <tr>
+                <th>领域</th>
+                <th>第一次</th>
+                <th>第二次</th>
+                <th>变化</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="row in scoreRows" :key="row.domain">
+                <td class="score-table__domain">{{ row.domain }}</td>
+                <td class="score-table__num">{{ row.score1 }}</td>
+                <td class="score-table__num">{{ row.score2 }}</td>
+                <td>
+                  <span :class="getChangeClass(row.change)">
+                    {{ formatChange(row.change) }}
+                  </span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
-      <BaseTable :columns="scoreColumns" :data="scoreRows">
-        <template #cell-change="{ row }">
-          <span :class="getChangeClass(row.change)">
-            {{ formatChange(row.change) }}
-          </span>
-        </template>
-      </BaseTable>
-    </div>
+    </template>
 
-    <EmptyState
-      v-if="!comparisonData && !loading"
-      title="选择评估进行对比"
-      description="选择两次评估来查看幼儿或班级的发展变化趋势"
-    />
+    <!-- Empty State -->
+    <div class="empty-state" v-if="!comparisonData && !loading">
+      <div class="empty-state__icon">
+        <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+          <rect x="4" y="8" width="40" height="32" rx="4" stroke="var(--color-text-tertiary)" stroke-width="2"/>
+          <path d="M4 18h40" stroke="var(--color-text-tertiary)" stroke-width="2"/>
+          <circle cx="14" cy="13" r="2" fill="var(--color-text-tertiary)"/>
+          <circle cx="22" cy="13" r="2" fill="var(--color-text-tertiary)"/>
+          <circle cx="30" cy="13" r="2" fill="var(--color-text-tertiary)"/>
+          <path d="M16 28l5 5 11-11" stroke="var(--color-accent)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <h4 class="empty-state__title">选择评估进行对比</h4>
+      <p class="empty-state__desc">选择两次评估来查看幼儿或班级的发展变化趋势</p>
+    </div>
   </div>
 </template>
 
@@ -257,24 +282,290 @@ async function handleCompare() {
 </script>
 
 <style scoped>
-.compare-form {
+.compare-page {
+  max-width: 960px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* ---- Page Title ---- */
+.compare-page__title {
+  margin-bottom: 0;
+}
+
+.compare-page__title h1 {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  margin: 0 0 4px 0;
+}
+
+.compare-page__subtitle {
+  font-size: 14px;
+  color: var(--color-text-tertiary);
+  margin: 0;
+}
+
+/* ---- Selection Card ---- */
+.selection-card {
+  background: #fff;
+  border-radius: var(--radius-xl);
+  padding: 28px;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--color-border);
+}
+
+.section-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin: 0 0 20px 0;
+}
+
+.selection-form {
   display: flex;
   flex-direction: column;
   gap: 16px;
-  max-width: 600px;
+}
+
+.form-row {
+  display: flex;
+  gap: 16px;
+  align-items: flex-end;
+}
+
+.form-field {
+  flex: 1;
+  min-width: 0;
+}
+
+.form-field--grow {
+  flex: 2;
+}
+
+.form-label {
+  display: block;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  margin-bottom: 6px;
+}
+
+.form-select {
+  width: 100%;
+  padding: 9px 12px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  color: var(--color-text-primary);
+  background: #fff;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23A8A29E' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 32px;
+  cursor: pointer;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  box-sizing: border-box;
+}
+
+.form-select:focus {
+  outline: none;
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 3px var(--color-accent-light);
+}
+
+.compare-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  align-self: flex-start;
+  padding: 10px 28px;
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+  background: var(--color-accent);
+  cursor: pointer;
+  transition: background 0.15s ease, box-shadow 0.15s ease;
+}
+
+.compare-btn:hover:not(:disabled) {
+  background: #4338CA;
+  box-shadow: 0 2px 8px rgba(79, 70, 229, 0.3);
+}
+
+.compare-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.compare-btn__spinner {
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ---- Charts Grid ---- */
+.charts-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+.chart-card {
+  background: #fff;
+  border-radius: var(--radius-xl);
+  padding: 24px;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--color-border);
+}
+
+/* ---- Score Table ---- */
+.table-card {
+  background: #fff;
+  border-radius: var(--radius-xl);
+  padding: 24px;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--color-border);
+}
+
+.score-table-wrapper {
+  overflow-x: auto;
+}
+
+.score-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.score-table thead th {
+  text-align: left;
+  padding: 10px 16px;
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--color-text-tertiary);
+  border-bottom: 1px solid var(--color-border);
+  white-space: nowrap;
+}
+
+.score-table tbody td {
+  padding: 12px 16px;
+  color: var(--color-text-primary);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.score-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.score-table tbody tr:hover {
+  background: var(--color-accent-light);
+}
+
+.score-table__domain {
+  font-weight: 500;
+}
+
+.score-table__num {
+  font-variant-numeric: tabular-nums;
+  text-align: center;
 }
 
 .change-positive {
-  color: var(--color-success);
+  color: #10B981;
   font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
 }
 
 .change-negative {
-  color: var(--color-danger);
+  color: #EF4444;
   font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
 }
 
 .change-neutral {
   color: var(--color-text-tertiary);
+}
+
+/* ---- Empty State ---- */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 24px;
+  text-align: center;
+  background: #fff;
+  border-radius: var(--radius-xl);
+  border: 1px dashed var(--color-border);
+}
+
+.empty-state__icon {
+  margin-bottom: 16px;
+  opacity: 0.5;
+}
+
+.empty-state__title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin: 0 0 6px 0;
+}
+
+.empty-state__desc {
+  font-size: 14px;
+  color: var(--color-text-tertiary);
+  margin: 0;
+  max-width: 320px;
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 768px) {
+  .charts-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .form-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .form-field--grow {
+    flex: 1;
+  }
+}
+
+@media (max-width: 480px) {
+  .compare-page {
+    gap: 16px;
+  }
+
+  .selection-card,
+  .chart-card,
+  .table-card {
+    padding: 16px;
+    border-radius: var(--radius-lg);
+  }
+
+  .compare-btn {
+    width: 100%;
+  }
 }
 </style>

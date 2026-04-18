@@ -27,22 +27,28 @@
 
       <!-- Preview -->
       <div class="preview-panel">
-        <h3>预览</h3>
+        <div class="preview-panel-header">
+          <h3>预览</h3>
+        </div>
         <div v-if="hasContent" class="preview-content">
           <div class="preview-meta">
-            <span v-if="form.class_id" class="badge badge-info">{{ currentClassName }}</span>
-            <span v-if="form.location" class="badge badge-neutral">{{ form.location }}</span>
-            <span v-if="form.activity_type" class="badge badge-neutral">{{ form.activity_type }}</span>
+            <span v-if="form.class_id" class="preview-badge preview-badge--class">{{ currentClassName }}</span>
+            <span v-if="form.location" class="preview-badge preview-badge--location">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              {{ form.location }}
+            </span>
+            <span v-if="form.activity_type" class="preview-badge preview-badge--activity">{{ form.activity_type }}</span>
           </div>
-          <div class="preview-time mt-sm" v-if="form.observation_time">
+          <div class="preview-time" v-if="form.observation_time">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
             {{ formatDate(form.observation_time) }}
           </div>
-          <div class="preview-body mt-md">
+          <div class="preview-body">
             <p>{{ form.content }}</p>
           </div>
-          <div class="preview-names mt-md" v-if="form.children_names.length">
-            <span class="text-xs text-tertiary">关联幼儿：</span>
-            <div class="tag-group mt-sm">
+          <div class="preview-names" v-if="form.children_names.length">
+            <span class="preview-label">关联幼儿</span>
+            <div class="preview-tag-group">
               <NameTag
                 v-for="name in form.children_names"
                 :key="name"
@@ -50,12 +56,14 @@
               />
             </div>
           </div>
-          <div class="preview-teacher mt-md" v-if="form.teacher_name">
-            <span class="text-xs text-tertiary">教师：{{ form.teacher_name }}</span>
+          <div class="preview-teacher" v-if="form.teacher_name">
+            <span class="preview-label">教师</span>
+            <span class="preview-teacher-name">{{ form.teacher_name }}</span>
           </div>
         </div>
         <div v-else class="preview-empty">
-          <p class="text-tertiary text-sm">填写左侧表单，预览将在此显示</p>
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          <p>填写左侧表单，预览将在此显示</p>
         </div>
       </div>
     </div>
@@ -147,26 +155,82 @@ async function handleSubmit() {
 </script>
 
 <style scoped>
+/* Split Panel */
+.split-panel {
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: 32px;
+  align-items: start;
+}
+
+/* Form Panel */
 .form-panel {
   min-width: 0;
 }
 
-.preview-empty {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 200px;
+/* Preview Panel */
+.preview-panel {
+  position: sticky;
+  top: 24px;
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  padding: 24px;
+  box-shadow: var(--shadow-sm);
+}
+
+.preview-panel-header {
+  margin-bottom: 20px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.preview-panel-header h3 {
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--color-text-primary);
 }
 
 .preview-meta {
   display: flex;
-  gap: 6px;
+  gap: 8px;
   flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.preview-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 12px;
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-xs);
+  font-weight: 500;
+}
+
+.preview-badge--class {
+  background: var(--color-accent-light);
+  color: var(--color-accent);
+}
+
+.preview-badge--location {
+  background: var(--color-bg-primary);
+  color: var(--color-text-secondary);
+  border: 1px solid var(--color-border);
+}
+
+.preview-badge--activity {
+  background: #ECFDF5;
+  color: #059669;
 }
 
 .preview-time {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
   font-size: var(--font-size-xs);
   color: var(--color-text-tertiary);
+  margin-bottom: 16px;
 }
 
 .preview-body {
@@ -174,5 +238,82 @@ async function handleSubmit() {
   line-height: 1.8;
   color: var(--color-text-primary);
   white-space: pre-wrap;
+  margin-bottom: 20px;
+  padding: 16px;
+  background: var(--color-bg-primary);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border);
+}
+
+.preview-names {
+  margin-bottom: 16px;
+}
+
+.preview-label {
+  display: block;
+  font-size: var(--font-size-xs);
+  color: var(--color-text-tertiary);
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+
+.preview-tag-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.preview-teacher {
+  padding-top: 14px;
+  border-top: 1px solid var(--color-border);
+}
+
+.preview-teacher-name {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-primary);
+  font-weight: 500;
+}
+
+.preview-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 240px;
+  text-align: center;
+  color: var(--color-text-tertiary);
+  gap: 12px;
+}
+
+.preview-empty svg {
+  opacity: 0.3;
+}
+
+.preview-empty p {
+  font-size: var(--font-size-sm);
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .split-panel {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .preview-panel {
+    position: static;
+    order: -1;
+  }
+}
+
+@media (max-width: 640px) {
+  .preview-panel {
+    padding: 18px;
+    border-radius: var(--radius-lg);
+  }
+
+  .preview-body {
+    padding: 12px;
+  }
 }
 </style>

@@ -1,54 +1,55 @@
 <template>
-  <div class="page-container">
-    <!-- Child Info -->
-    <div class="child-profile-header card mb-lg" v-if="child">
-      <div class="child-profile-info">
-        <div class="child-avatar" :style="{ background: avatarColor }">
+  <div class="profile-page">
+    <!-- Profile Header -->
+    <div class="profile-header" v-if="child">
+      <div class="profile-header__main">
+        <div class="profile-avatar" :style="{ background: avatarColor }">
           {{ avatarText }}
         </div>
-        <div class="child-details">
-          <h2 class="child-name">{{ child.name }}</h2>
-          <div class="child-meta">
-            <span v-if="child.gender">{{ child.gender === 'male' ? '男' : '女' }}</span>
-            <span v-if="child.birthday">{{ calcAge(child.birthday) }}</span>
-            <span v-if="child.class_name" class="badge badge-info">{{ child.class_name }}</span>
+        <div class="profile-identity">
+          <h1 class="profile-name">{{ child.name }}</h1>
+          <div class="profile-badges">
+            <span class="profile-badge" v-if="child.gender">
+              {{ child.gender === 'male' ? '男' : '女' }}
+            </span>
+            <span class="profile-badge" v-if="child.birthday">{{ calcAge(child.birthday) }}</span>
+            <span class="profile-badge profile-badge--accent" v-if="child.class_name">
+              {{ child.class_name }}
+            </span>
           </div>
         </div>
       </div>
-      <div class="child-stats">
-        <div class="child-stat-item">
-          <span class="child-stat-value">{{ child.anecdote_count || 0 }}</span>
-          <span class="child-stat-label">观察记录</span>
+      <div class="profile-stats">
+        <div class="profile-stat">
+          <span class="profile-stat__value">{{ child.anecdote_count || 0 }}</span>
+          <span class="profile-stat__label">观察记录</span>
         </div>
-        <div class="child-stat-item">
-          <span class="child-stat-value">{{ child.assessment_count || 0 }}</span>
-          <span class="child-stat-label">评估报告</span>
+        <div class="profile-stat-divider"></div>
+        <div class="profile-stat">
+          <span class="profile-stat__value">{{ child.assessment_count || 0 }}</span>
+          <span class="profile-stat__label">评估报告</span>
         </div>
       </div>
     </div>
 
-    <!-- Domain Radar -->
-    <div class="grid grid-2 mb-lg" v-if="child?.latest_scores">
-      <div class="card">
-        <div class="card-header">
-          <h3 class="card-title">发展领域评估</h3>
-        </div>
+    <!-- Domain Radar + Scores -->
+    <div class="domain-section" v-if="child?.latest_scores">
+      <div class="domain-radar-card">
+        <h3 class="section-title">发展领域评估</h3>
         <DomainRadar :scores="child.latest_scores" :height="280" />
       </div>
-      <div class="card">
-        <div class="card-header">
-          <h3 class="card-title">各领域得分</h3>
-        </div>
-        <div class="domain-scores">
-          <div v-for="domain in domains" :key="domain.key" class="domain-score-item">
-            <div class="domain-score-header">
+      <div class="domain-scores-card">
+        <h3 class="section-title">各领域得分</h3>
+        <div class="domain-scores-list">
+          <div v-for="domain in domains" :key="domain.key" class="domain-score-row">
+            <div class="domain-score-row__header">
               <span class="domain-dot" :style="{ background: domain.color }"></span>
-              <span class="domain-name">{{ domain.name }}</span>
+              <span class="domain-label">{{ domain.name }}</span>
               <span class="domain-value">{{ child.latest_scores[domain.key] || '-' }}</span>
             </div>
-            <div class="domain-bar">
+            <div class="domain-progress">
               <div
-                class="domain-bar-fill"
+                class="domain-progress__fill"
                 :style="{ width: ((child.latest_scores[domain.key] || 0) / 5 * 100) + '%', background: domain.color }"
               ></div>
             </div>
@@ -58,10 +59,15 @@
     </div>
 
     <!-- Anecdote Timeline -->
-    <div class="card">
-      <div class="card-header">
-        <h3 class="card-title">观察记录</h3>
-        <router-link to="/anecdotes/new" class="btn btn-ghost btn-sm">新建记录</router-link>
+    <div class="timeline-section">
+      <div class="timeline-section__header">
+        <h3 class="section-title">观察记录</h3>
+        <router-link to="/anecdotes/new" class="timeline-new-btn">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+            <path d="M7 1v12M1 7h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          新建记录
+        </router-link>
       </div>
       <AnecdoteTimeline :anecdotes="anecdotes" />
     </div>
@@ -108,108 +114,268 @@ onMounted(async () => {
 </script>
 
 <style scoped>
-.child-profile-header {
+.profile-page {
+  max-width: 960px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* ---- Profile Header ---- */
+.profile-header {
+  background: #fff;
+  border-radius: var(--radius-xl);
+  padding: 32px;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--color-border);
   display: flex;
   align-items: center;
   justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 24px;
 }
 
-.child-profile-info {
+.profile-header__main {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 20px;
 }
 
-.child-avatar {
-  width: 56px;
-  height: 56px;
+.profile-avatar {
+  width: 72px;
+  height: 72px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   color: #fff;
-  font-size: var(--font-size-xl);
+  font-size: 28px;
   font-weight: 700;
+  flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
 }
 
-.child-name {
-  font-size: var(--font-size-2xl);
+.profile-identity {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.profile-name {
+  font-size: 24px;
   font-weight: 700;
   color: var(--color-text-primary);
-  margin-bottom: 4px;
+  margin: 0;
+  line-height: 1.3;
 }
 
-.child-meta {
+.profile-badges {
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: var(--font-size-sm);
-  color: var(--color-text-secondary);
+  flex-wrap: wrap;
 }
 
-.child-stats {
+.profile-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  border-radius: var(--radius-full);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  background: var(--color-bg-tertiary, #F5F5F4);
+}
+
+.profile-badge--accent {
+  background: var(--color-accent-light);
+  color: var(--color-accent);
+  font-weight: 600;
+}
+
+.profile-stats {
   display: flex;
+  align-items: center;
   gap: 24px;
 }
 
-.child-stat-item {
-  text-align: center;
-}
-
-.child-stat-value {
-  display: block;
-  font-size: var(--font-size-2xl);
-  font-weight: 700;
-  color: var(--color-text-primary);
-}
-
-.child-stat-label {
-  font-size: var(--font-size-xs);
-  color: var(--color-text-tertiary);
-}
-
-.domain-scores {
+.profile-stat {
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  padding: 8px 0;
+  align-items: center;
+  gap: 2px;
 }
 
-.domain-score-header {
+.profile-stat__value {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  line-height: 1.2;
+}
+
+.profile-stat__label {
+  font-size: 12px;
+  color: var(--color-text-tertiary);
+  font-weight: 500;
+}
+
+.profile-stat-divider {
+  width: 1px;
+  height: 36px;
+  background: var(--color-border);
+}
+
+/* ---- Domain Section ---- */
+.domain-section {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+.domain-radar-card,
+.domain-scores-card {
+  background: #fff;
+  border-radius: var(--radius-xl);
+  padding: 24px;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--color-border);
+}
+
+.section-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin: 0 0 20px 0;
+}
+
+.domain-scores-list {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.domain-score-row__header {
   display: flex;
   align-items: center;
-  gap: 8px;
-  margin-bottom: 6px;
+  gap: 10px;
+  margin-bottom: 8px;
 }
 
 .domain-dot {
-  width: 8px;
-  height: 8px;
+  width: 10px;
+  height: 10px;
   border-radius: 50%;
+  flex-shrink: 0;
 }
 
-.domain-name {
-  font-size: var(--font-size-sm);
+.domain-label {
+  font-size: 14px;
   color: var(--color-text-secondary);
   flex: 1;
+  font-weight: 500;
 }
 
 .domain-value {
-  font-size: var(--font-size-sm);
-  font-weight: 600;
+  font-size: 14px;
+  font-weight: 700;
   color: var(--color-text-primary);
+  min-width: 20px;
+  text-align: right;
 }
 
-.domain-bar {
+.domain-progress {
   height: 6px;
-  background: var(--color-bg-tertiary);
+  background: var(--color-bg-tertiary, #F5F5F4);
   border-radius: 3px;
   overflow: hidden;
 }
 
-.domain-bar-fill {
+.domain-progress__fill {
   height: 100%;
   border-radius: 3px;
-  transition: width 0.5s ease;
+  transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ---- Timeline Section ---- */
+.timeline-section {
+  background: #fff;
+  border-radius: var(--radius-xl);
+  padding: 24px;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--color-border);
+}
+
+.timeline-section__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.timeline-section__header .section-title {
+  margin-bottom: 0;
+}
+
+.timeline-new-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: var(--radius-md);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-accent);
+  background: var(--color-accent-light);
+  text-decoration: none;
+  transition: background 0.15s ease;
+}
+
+.timeline-new-btn:hover {
+  background: #E0E7FF;
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 768px) {
+  .profile-header {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 24px;
+  }
+
+  .profile-avatar {
+    width: 60px;
+    height: 60px;
+    font-size: 24px;
+  }
+
+  .profile-name {
+    font-size: 20px;
+  }
+
+  .profile-stat__value {
+    font-size: 22px;
+  }
+
+  .domain-section {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .profile-page {
+    gap: 16px;
+  }
+
+  .profile-header {
+    padding: 20px;
+  }
+
+  .domain-radar-card,
+  .domain-scores-card,
+  .timeline-section {
+    padding: 16px;
+    border-radius: var(--radius-lg);
+  }
 }
 </style>

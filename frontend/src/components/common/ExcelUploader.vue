@@ -1,7 +1,7 @@
 <template>
   <div
-    class="upload-area"
-    :class="{ dragover: isDragover }"
+    class="uploader"
+    :class="{ 'uploader--dragover': isDragover }"
     @click="triggerUpload"
     @dragover.prevent="onDragOver"
     @dragleave="onDragLeave"
@@ -11,25 +11,29 @@
       ref="fileInput"
       type="file"
       :accept="accept"
-      class="upload-input"
+      class="uploader-input"
       @change="onFileChange"
     />
-    <div class="upload-area-icon">
-      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-    </div>
-    <p class="upload-area-text">{{ isDragover ? '释放文件以上传' : '点击或拖拽文件到此处' }}</p>
-    <p class="upload-area-hint">支持 .xlsx, .xls 格式</p>
 
-    <div v-if="uploading" class="upload-progress mt-md">
-      <div class="progress-bar">
-        <div class="progress-bar-fill" :style="{ width: progress + '%' }"></div>
+    <div class="uploader-icon">
+      <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+    </div>
+
+    <p class="uploader-text">{{ isDragover ? '释放文件以上传' : '点击或拖拽文件到此处' }}</p>
+    <p class="uploader-hint">支持 .xlsx, .xls 格式</p>
+
+    <div v-if="uploading" class="uploader-progress">
+      <div class="uploader-progress-track">
+        <div class="uploader-progress-fill" :style="{ width: progress + '%' }"></div>
       </div>
-      <p class="text-xs text-tertiary mt-sm">上传中... {{ progress }}%</p>
+      <p class="uploader-progress-label">上传中... {{ progress }}%</p>
     </div>
 
-    <div v-if="uploadedFile" class="upload-result mt-sm">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-      <span class="text-sm">{{ uploadedFile.name }}</span>
+    <div v-if="uploadedFile" class="uploader-result">
+      <span class="uploader-result-icon">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+      </span>
+      <span class="uploader-result-name">{{ uploadedFile.name }}</span>
     </div>
   </div>
 </template>
@@ -116,45 +120,101 @@ defineExpose({ reset })
 </script>
 
 <style scoped>
-.upload-input {
+.uploader-input {
   display: none;
 }
 
-.upload-area {
+.uploader {
   border: 2px dashed var(--color-border);
-  border-radius: var(--radius-lg);
-  padding: 40px;
+  border-radius: var(--radius-xl);
+  padding: 40px 24px;
   text-align: center;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all var(--transition-normal);
+  background: #FDFCFA;
 }
 
-.upload-area:hover,
-.upload-area.dragover {
+.uploader:hover {
+  border-color: var(--color-text-tertiary);
+  background: #FAF9F7;
+}
+
+.uploader--dragover {
   border-color: var(--color-accent);
   background: var(--color-accent-light);
 }
 
-.upload-area-icon {
+.uploader-icon {
   color: var(--color-text-tertiary);
-  margin-bottom: 12px;
+  margin-bottom: 14px;
+  transition: color var(--transition-fast);
 }
 
-.upload-area-text {
-  font-size: var(--font-size-sm);
+.uploader--dragover .uploader-icon {
+  color: var(--color-accent);
+}
+
+.uploader-text {
+  font-size: 14px;
+  font-weight: 500;
   color: var(--color-text-secondary);
+  margin: 0 0 6px 0;
 }
 
-.upload-area-hint {
-  font-size: var(--font-size-xs);
+.uploader-hint {
+  font-size: 12px;
   color: var(--color-text-tertiary);
-  margin-top: 4px;
+  margin: 0;
 }
 
-.upload-result {
+/* Progress */
+.uploader-progress {
+  margin-top: 20px;
+  max-width: 280px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.uploader-progress-track {
+  height: 6px;
+  background: var(--color-border-subtle);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+.uploader-progress-fill {
+  height: 100%;
+  background: var(--color-accent);
+  border-radius: var(--radius-full);
+  transition: width 150ms ease;
+}
+
+.uploader-progress-label {
+  font-size: 12px;
+  color: var(--color-text-tertiary);
+  margin: 8px 0 0 0;
+}
+
+/* Result */
+.uploader-result {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 16px;
+  padding: 6px 14px;
+  background: #ECFDF5;
+  border-radius: var(--radius-full);
+}
+
+.uploader-result-icon {
+  color: #059669;
   display: flex;
   align-items: center;
-  gap: 6px;
-  color: var(--color-success);
+}
+
+.uploader-result-name {
+  font-size: 13px;
+  color: #065F46;
+  font-weight: 500;
 }
 </style>

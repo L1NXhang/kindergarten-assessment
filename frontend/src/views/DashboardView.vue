@@ -1,96 +1,88 @@
 <template>
-  <div class="page-container">
+  <div class="dashboard-page">
     <!-- Stats Cards -->
-    <div class="grid grid-4 mb-lg">
-      <div class="stat-card">
-        <div class="flex-between mb-sm">
-          <div>
-            <div class="stat-card-value">{{ stats.classCount }}</div>
-            <div class="stat-card-label">班级数</div>
-          </div>
-          <div class="stat-card-icon" style="background:#EFF6FF;color:#2563EB;">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-          </div>
+    <div class="stats-grid">
+      <div class="stat-card" style="--delay: 0">
+        <div class="stat-card__content">
+          <div class="stat-card__number">{{ stats.classCount }}</div>
+          <div class="stat-card__label">班级数</div>
+        </div>
+        <div class="stat-card__icon stat-card__icon--blue">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
         </div>
       </div>
 
-      <div class="stat-card">
-        <div class="flex-between mb-sm">
-          <div>
-            <div class="stat-card-value">{{ stats.childCount }}</div>
-            <div class="stat-card-label">幼儿数</div>
-          </div>
-          <div class="stat-card-icon" style="background:#ECFDF5;color:#10B981;">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-          </div>
+      <div class="stat-card" style="--delay: 1">
+        <div class="stat-card__content">
+          <div class="stat-card__number">{{ stats.childCount }}</div>
+          <div class="stat-card__label">幼儿数</div>
+        </div>
+        <div class="stat-card__icon stat-card__icon--green">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
         </div>
       </div>
 
-      <div class="stat-card">
-        <div class="flex-between mb-sm">
-          <div>
-            <div class="stat-card-value">{{ stats.monthAnecdotes }}</div>
-            <div class="stat-card-label">本月记录数</div>
-          </div>
-          <div class="stat-card-icon" style="background:#FFF7ED;color:#D97706;">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-          </div>
+      <div class="stat-card" style="--delay: 2">
+        <div class="stat-card__content">
+          <div class="stat-card__number">{{ stats.monthAnecdotes }}</div>
+          <div class="stat-card__label">本月记录数</div>
+        </div>
+        <div class="stat-card__icon stat-card__icon--amber">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
         </div>
       </div>
 
-      <div class="stat-card">
-        <div class="flex-between mb-sm">
-          <div>
-            <div class="stat-card-value">{{ stats.pendingAssessments }}</div>
-            <div class="stat-card-label">待生成评估</div>
-          </div>
-          <div class="stat-card-icon" style="background:#F5F3FF;color:#8B5CF6;">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
-          </div>
+      <div class="stat-card" style="--delay: 3">
+        <div class="stat-card__content">
+          <div class="stat-card__number">{{ stats.pendingAssessments }}</div>
+          <div class="stat-card__label">待生成评估</div>
+        </div>
+        <div class="stat-card__icon stat-card__icon--violet">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
         </div>
       </div>
     </div>
 
     <!-- Quick Actions -->
-    <div class="card mb-lg">
-      <div class="card-header">
-        <h3 class="card-title">快捷操作</h3>
+    <div class="section-card">
+      <div class="section-card__header">
+        <h3 class="section-card__title">快捷操作</h3>
       </div>
       <div class="quick-actions">
         <router-link to="/anecdotes/new" class="quick-action-item">
-          <div class="quick-action-icon" style="background:#EFF6FF;color:#2563EB;">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          <div class="quick-action-item__icon quick-action-item__icon--blue">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
           </div>
-          <span>新建观察记录</span>
+          <span class="quick-action-item__label">新建观察记录</span>
         </router-link>
         <router-link to="/classes" class="quick-action-item">
-          <div class="quick-action-icon" style="background:#ECFDF5;color:#10B981;">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+          <div class="quick-action-item__icon quick-action-item__icon--green">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
           </div>
-          <span>管理班级</span>
+          <span class="quick-action-item__label">管理班级</span>
         </router-link>
         <router-link to="/assessments" class="quick-action-item">
-          <div class="quick-action-icon" style="background:#FFF7ED;color:#D97706;">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+          <div class="quick-action-item__icon quick-action-item__icon--amber">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
           </div>
-          <span>查看评估</span>
+          <span class="quick-action-item__label">查看评估</span>
         </router-link>
         <router-link to="/compare" class="quick-action-item">
-          <div class="quick-action-icon" style="background:#F5F3FF;color:#8B5CF6;">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          <div class="quick-action-item__icon quick-action-item__icon--violet">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
           </div>
-          <span>历史对比</span>
+          <span class="quick-action-item__label">历史对比</span>
         </router-link>
       </div>
     </div>
 
     <!-- Recent Anecdotes -->
-    <div class="card">
-      <div class="card-header">
-        <h3 class="card-title">最近观察记录</h3>
-        <router-link to="/anecdotes" class="btn btn-ghost btn-sm">查看全部</router-link>
+    <div class="section-card">
+      <div class="section-card__header">
+        <h3 class="section-card__title">最近观察记录</h3>
+        <router-link to="/anecdotes" class="section-card__action">查看全部</router-link>
       </div>
-      <div v-if="loading" class="flex-center" style="padding:40px;">
+      <div v-if="loading" class="loading-wrapper">
         <span class="loading-spinner"></span>
       </div>
       <div v-else-if="recentAnecdotes.length > 0" class="anecdote-list">
@@ -170,34 +162,168 @@ onMounted(async () => {
 </script>
 
 <style scoped>
+.dashboard-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--space-8) var(--space-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+}
+
+/* ── Stats Grid ── */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-4);
+}
+
+.stat-card {
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-xl);
+  padding: var(--space-6);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  animation: fadeInUp 0.4s var(--transition-slow) both;
+  animation-delay: calc(var(--delay) * 80ms);
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.stat-card__content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.stat-card__number {
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 1.1;
+  color: var(--color-text-primary);
+  letter-spacing: -0.02em;
+}
+
+.stat-card__label {
+  font-size: 14px;
+  color: var(--color-text-secondary);
+  font-weight: 400;
+}
+
+.stat-card__icon {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.stat-card__icon--blue {
+  background: linear-gradient(135deg, #EEF2FF 0%, #E0E7FF 100%);
+  color: #4F46E5;
+}
+
+.stat-card__icon--green {
+  background: linear-gradient(135deg, #ECFDF5 0%, #D1FAE5 100%);
+  color: #059669;
+}
+
+.stat-card__icon--amber {
+  background: linear-gradient(135deg, #FFFBEB 0%, #FEF3C7 100%);
+  color: #D97706;
+}
+
+.stat-card__icon--violet {
+  background: linear-gradient(135deg, #F5F3FF 0%, #EDE9FE 100%);
+  color: #7C3AED;
+}
+
+/* ── Section Card ── */
+.section-card {
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-xl);
+  padding: var(--space-6);
+}
+
+.section-card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-5);
+}
+
+.section-card__title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  letter-spacing: -0.01em;
+}
+
+.section-card__action {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-accent);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+.section-card__action:hover {
+  color: #3730A3;
+}
+
+/* ── Quick Actions ── */
 .quick-actions {
   display: flex;
-  gap: 12px;
-  flex-wrap: wrap;
+  gap: var(--space-3);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  padding-bottom: var(--space-1);
+}
+
+.quick-actions::-webkit-scrollbar {
+  display: none;
 }
 
 .quick-action-item {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 12px 16px;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
   border-radius: var(--radius-lg);
-  background: var(--color-bg-tertiary);
-  border: 1px solid var(--color-border);
-  font-size: var(--font-size-sm);
-  font-weight: 500;
-  color: var(--color-text-primary);
+  background: var(--color-bg-primary);
+  border: 1px solid var(--color-border-subtle);
   text-decoration: none;
-  transition: all 0.15s ease;
+  white-space: nowrap;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast), transform var(--transition-fast);
+  flex-shrink: 0;
 }
 
 .quick-action-item:hover {
   border-color: var(--color-accent);
-  background: var(--color-accent-light);
+  box-shadow: var(--shadow-sm);
+  transform: translateY(-1px);
+}
+
+.quick-action-item:hover .quick-action-item__label {
   color: var(--color-accent);
 }
 
-.quick-action-icon {
+.quick-action-item__icon {
   width: 36px;
   height: 36px;
   border-radius: var(--radius-md);
@@ -205,11 +331,110 @@ onMounted(async () => {
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  transition: transform var(--transition-fast);
 }
 
+.quick-action-item:hover .quick-action-item__icon {
+  transform: scale(1.05);
+}
+
+.quick-action-item__icon--blue {
+  background: var(--color-accent-light);
+  color: var(--color-accent);
+}
+
+.quick-action-item__icon--green {
+  background: #ECFDF5;
+  color: #059669;
+}
+
+.quick-action-item__icon--amber {
+  background: #FFFBEB;
+  color: #D97706;
+}
+
+.quick-action-item__icon--violet {
+  background: #F5F3FF;
+  color: #7C3AED;
+}
+
+.quick-action-item__label {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-text-primary);
+  transition: color var(--transition-fast);
+}
+
+/* ── Anecdote List ── */
 .anecdote-list {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: var(--space-2);
+}
+
+.anecdote-list :deep(.anecdote-card) {
+  border-left: 3px solid transparent;
+  transition: border-left-color var(--transition-fast), background-color var(--transition-fast);
+}
+
+.anecdote-list :deep(.anecdote-card:hover) {
+  border-left-color: var(--color-accent);
+  background-color: var(--color-bg-primary);
+}
+
+/* ── Loading ── */
+.loading-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-10);
+}
+
+/* ── Responsive ── */
+@media (max-width: 1024px) {
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .dashboard-page {
+    padding: var(--space-4) var(--space-4);
+    gap: var(--space-6);
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-3);
+  }
+
+  .stat-card {
+    padding: var(--space-4);
+  }
+
+  .stat-card__number {
+    font-size: 26px;
+  }
+
+  .stat-card__icon {
+    width: 40px;
+    height: 40px;
+  }
+
+  .section-card {
+    padding: var(--space-4);
+  }
+
+  .quick-actions {
+    gap: var(--space-2);
+  }
+
+  .quick-action-item {
+    padding: var(--space-3);
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    min-width: 100px;
+  }
 }
 </style>

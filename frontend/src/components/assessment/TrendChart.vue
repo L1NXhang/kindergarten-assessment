@@ -38,6 +38,10 @@ function createChart() {
         borderWidth: 2,
         pointRadius: 4,
         pointHoverRadius: 6,
+        pointBackgroundColor: '#4F46E5',
+        pointBorderColor: '#fff',
+        pointBorderWidth: 2,
+        borderColor: '#4F46E5',
         fill: false
       }))
     },
@@ -50,15 +54,18 @@ function createChart() {
           position: 'top',
           labels: {
             usePointStyle: true,
-            padding: 16,
-            font: { size: 12 }
+            pointStyle: 'circle',
+            padding: 20,
+            font: { size: 12, weight: '500' },
+            color: '#57534E'
           }
         }
       },
       scales: {
         x: {
           grid: { display: false },
-          ticks: { font: { size: 11 }, color: '#9B9B9B' }
+          ticks: { font: { size: 12 }, color: '#A8A29E' },
+          border: { display: false }
         },
         y: {
           beginAtZero: true,
@@ -66,9 +73,14 @@ function createChart() {
           ticks: {
             stepSize: 1,
             font: { size: 11 },
-            color: '#9B9B9B'
+            color: '#A8A29E',
+            padding: 8
           },
-          grid: { color: '#F0F0F0' }
+          grid: {
+            color: '#F0EDE8',
+            lineWidth: 1
+          },
+          border: { display: false }
         }
       },
       interaction: {

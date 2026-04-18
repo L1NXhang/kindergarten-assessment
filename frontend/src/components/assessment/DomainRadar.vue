@@ -25,7 +25,7 @@ const canvasRef = ref(null)
 let chartInstance = null
 
 const labels = ['健康', '语言', '社会', '科学', '艺术']
-const colors = ['#10B981', '#3B82F6', '#F59E0B', '#8B5CF6', '#EC4899']
+const colors = ['#10B981', '#6366F1', '#F59E0B', '#8B5CF6', '#EC4899']
 
 function createChart() {
   if (!canvasRef.value) return
@@ -47,8 +47,8 @@ function createChart() {
       datasets: [{
         label: '发展评估',
         data,
-        backgroundColor: 'rgba(37, 99, 235, 0.1)',
-        borderColor: '#2563EB',
+        backgroundColor: 'rgba(79, 70, 229, 0.08)',
+        borderColor: '#4F46E5',
         borderWidth: 2,
         pointBackgroundColor: colors,
         pointBorderColor: '#fff',
@@ -72,17 +72,20 @@ function createChart() {
           ticks: {
             stepSize: 1,
             font: { size: 11 },
-            color: '#9B9B9B'
+            color: '#A8A29E',
+            backdropColor: 'transparent'
           },
           pointLabels: {
-            font: { size: 12, weight: '500' },
-            color: '#6B6B6B'
+            font: { size: 13, weight: '500' },
+            color: '#57534E'
           },
           grid: {
-            color: '#E5E5E5'
+            color: '#E8E5E0',
+            lineWidth: 1
           },
           angleLines: {
-            color: '#E5E5E5'
+            color: '#E8E5E0',
+            lineWidth: 1
           }
         }
       }
@@ -104,5 +107,7 @@ watch(() => props.scores, () => {
   width: 100%;
   height: v-bind(height + 'px');
   position: relative;
+  max-width: 480px;
+  margin: 0 auto;
 }
 </style>
